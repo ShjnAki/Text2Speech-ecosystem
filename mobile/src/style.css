@@ -1,0 +1,209 @@
+/* Reset et base */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --couleur-fond: #0f172a;
+  --couleur-surface: #1e293b;
+  --couleur-bordure: #334155;
+  --couleur-primaire: #6366f1;
+  --couleur-primaire-hover: #818cf8;
+  --couleur-texte: #f1f5f9;
+  --couleur-texte-secondaire: #94a3b8;
+  --couleur-erreur: #ef4444;
+  --couleur-succes: #22c55e;
+  --couleur-avertissement: #f59e0b;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--couleur-fond);
+  color: var(--couleur-texte);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Écran centré (login) */
+.ecran-centré {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Carte */
+.carte {
+  background: var(--couleur-surface);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.carte h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.carte .sous-titre {
+  font-size: 0.875rem;
+  color: var(--couleur-texte-secondaire);
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+/* Formulaires */
+.groupe-champ {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--couleur-texte-secondaire);
+}
+
+input[type="email"],
+input[type="password"],
+textarea {
+  background: var(--couleur-fond);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--radius-sm);
+  color: var(--couleur-texte);
+  font-size: 1rem;
+  padding: 12px 14px;
+  width: 100%;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--couleur-primaire);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 140px;
+  font-family: inherit;
+}
+
+/* Boutons */
+.btn {
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 12px 20px;
+  transition: background 0.2s, opacity 0.2s;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-primaire {
+  background: var(--couleur-primaire);
+  color: #fff;
+}
+.btn-primaire:hover:not(:disabled) { background: var(--couleur-primaire-hover); }
+
+.btn-secondaire {
+  background: transparent;
+  border: 1px solid var(--couleur-bordure);
+  color: var(--couleur-texte-secondaire);
+  font-size: 0.875rem;
+}
+.btn-secondaire:hover:not(:disabled) { border-color: var(--couleur-primaire); color: var(--couleur-texte); }
+
+/* Messages */
+.message {
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  margin-top: 12px;
+  padding: 10px 14px;
+  display: none;
+}
+.message.visible { display: block; }
+.message.erreur { background: #450a0a; border: 1px solid var(--couleur-erreur); color: var(--couleur-erreur); }
+.message.succes { background: #052e16; border: 1px solid var(--couleur-succes); color: var(--couleur-succes); }
+
+/* Layout app principale */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background: var(--couleur-surface);
+  border-bottom: 1px solid var(--couleur-bordure);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-header h1 { font-size: 1.125rem; font-weight: 700; }
+
+.app-body {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Compteur de caractères */
+.compteur {
+  font-size: 0.8rem;
+  color: var(--couleur-texte-secondaire);
+  text-align: right;
+  margin-top: 4px;
+  transition: color 0.2s;
+}
+.compteur.avertissement { color: var(--couleur-avertissement); font-weight: 600; }
+
+/* Lecteur audio */
+.lecteur-audio {
+  background: var(--couleur-surface);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: none;
+}
+.lecteur-audio.visible { display: block; }
+.lecteur-audio audio { width: 100%; margin-top: 8px; }
+
+/* Spinner — caché par défaut, affiché via JS (style.display) sans innerHTML */
+.btn-spinner {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Responsive (desktop) */
+@media (min-width: 640px) {
+  .app-body { padding: 32px 24px; }
+}
