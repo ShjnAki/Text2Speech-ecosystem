@@ -1,0 +1,48 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Config Nginx — Reverse proxy TTS API (à activer quand le DNS est disponible)
+# ─────────────────────────────────────────────────────────────────────────────
+# Pré-requis :
+#   1. Avoir un domaine pointant sur l'IP du VPS
+#   2. sudo apt install nginx certbot python3-certbot-nginx
+#   3. sudo certbot --nginx -d api.tondomaine.com
+#
+# Copier ce fichier dans /etc/nginx/sites-available/tts-api
+# Puis : sudo ln -s /etc/nginx/sites-available/tts-api /etc/nginx/sites-enabled/
+#        sudo nginx -t && sudo systemctl reload nginx
+# ─────────────────────────────────────────────────────────────────────────────
+
+server {
+    listen 80;
+    server_name api.tondomaine.com;
+
+    # Certbot insèrera ici la redirection HTTP→HTTPS automatiquement
+    # lors de l'exécution de : sudo certbot --nginx -d api.tondomaine.com
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # Timeout étendu pour les requêtes TTS (génération audio peut prendre quelques secondes)
+        proxy_read_timeout 60s;
+        proxy_send_timeout 60s;
+    }
+}
+
+# Bloc HTTPS (généré automatiquement par Certbot — présenté ici pour référence)
+# server {
+#     listen 443 ssl;
+#     server_name api.tondomaine.com;
+#
+#     ssl_certificate /etc/letsencrypt/live/api.tondomaine.com/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/api.tondomaine.com/privkey.pem;
+#
+#     location / {
+#         proxy_pass http://127.0.0.1:8000;
+#         proxy_set_header Host $host;
+#         proxy_set_header X-Real-IP $remote_addr;
+#         proxy_read_timeout 60s;
+#     }
+# }
