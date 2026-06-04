@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>TTS Mobile</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- En-tête -->
+    <header class="app-header">
+      <h1>TTS Mobile</h1>
+      <button class="btn btn-secondaire" id="btn-deconnexion" style="width:auto;padding:8px 14px;">
+        Se déconnecter
+      </button>
+    </header>
+
+    <!-- Corps -->
+    <main class="app-body">
+      <!-- Zone de texte -->
+      <div class="groupe-champ">
+        <label for="textarea-texte">Texte à lire</label>
+        <textarea
+          id="textarea-texte"
+          placeholder="Collez ou saisissez le texte ici..."
+          rows="7"
+        ></textarea>
+        <div class="compteur" id="compteur-chars">0 / 2500 caractères</div>
+      </div>
+
+      <!-- Boutons d'action -->
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="btn btn-secondaire" id="btn-charger-fichier" style="flex:1;min-width:140px;">
+          Charger un fichier
+        </button>
+        <button class="btn btn-primaire" id="btn-ecouter" disabled style="flex:2;min-width:140px;">
+          <span class="btn-spinner" aria-hidden="true"></span>
+          <span class="btn-texte">▶ Écouter</span>
+        </button>
+      </div>
+
+      <!-- Input fichier caché -->
+      <input type="file" id="input-fichier" accept=".txt,.md" style="display:none;">
+
+      <!-- Message d'erreur -->
+      <div class="message erreur" id="message-erreur"></div>
+
+      <!-- Lecteur audio -->
+      <div class="lecteur-audio" id="lecteur-audio">
+        <label style="font-size:0.875rem;color:var(--couleur-texte-secondaire);">Audio généré</label>
+        <audio id="audio" controls></audio>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { estConnecte } from './auth.js';
+    if (!estConnecte()) {
+      window.location.href = 'index.html';
+    }
+  </script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
