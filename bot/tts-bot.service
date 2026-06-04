@@ -1,0 +1,19 @@
+[Unit]
+Description=TTS Bot Telegram + Discord
+After=network.target
+# Démarrer après l'API TTS si elle tourne sur la même machine
+After=tts-api.service
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/tts-ecosystem/bot
+EnvironmentFile=/opt/tts-ecosystem/bot/.env
+ExecStart=/opt/tts-ecosystem/bot/.venv/bin/python main.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
