@@ -1,0 +1,11 @@
+{
+  "appId": "com.tts.mobile",
+  "appName": "TTS Mobile",
+  "webDir": "src",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}
