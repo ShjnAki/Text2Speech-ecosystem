@@ -30,9 +30,17 @@ def verify_user(email: str, password: str) -> bool:
     return False
 
 
+def _get_jwt_secret() -> str:
+    """Retourne le secret JWT ou lève AuthError si absent ou trop court (< 32 chars)."""
+    secret = os.getenv("JWT_SECRET")
+    if not secret or len(secret) < 32:
+        raise AuthError("JWT_SECRET non configuré ou trop court (minimum 32 caractères)")
+    return secret
+
+
 def create_access_token(email: str) -> str:
     """Crée un JWT signé pour l'utilisateur donné."""
-    secret = os.getenv("JWT_SECRET", "")
+    secret = _get_jwt_secret()
     expire_days = int(os.getenv("JWT_EXPIRE_DAYS", "7"))
     expire = datetime.now(timezone.utc) + timedelta(days=expire_days)
     payload = {"sub": email, "exp": expire}
@@ -41,7 +49,7 @@ def create_access_token(email: str) -> str:
 
 def decode_access_token(token: str) -> dict:
     """Décode et valide un JWT. Lève AuthError si invalide ou expiré."""
-    secret = os.getenv("JWT_SECRET", "")
+    secret = _get_jwt_secret()
     try:
         return jwt.decode(token, secret, algorithms=["HS256"])
     except JWTError as e:
