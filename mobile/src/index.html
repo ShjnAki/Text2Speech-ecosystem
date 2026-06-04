@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>TTS Mobile — Connexion</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ecran-centré">
+    <div class="carte">
+      <h1>TTS Mobile</h1>
+      <p class="sous-titre">Connectez-vous pour accéder à la synthèse vocale</p>
+
+      <form id="formulaire-login" novalidate>
+        <div class="groupe-champ">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="vous@example.com"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="groupe-champ">
+          <label for="mot-de-passe">Mot de passe</label>
+          <input
+            type="password"
+            id="mot-de-passe"
+            name="mot-de-passe"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primaire" id="btn-connexion">
+          <span class="btn-spinner" aria-hidden="true"></span>
+          <span class="btn-texte">Se connecter</span>
+        </button>
+      </form>
+
+      <div class="message erreur" id="message-erreur"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { login, estConnecte } from './auth.js';
+
+    // Redirection automatique si déjà connecté
+    if (estConnecte()) {
+      window.location.href = 'app.html';
+    }
+
+    const formulaire = document.getElementById('formulaire-login');
+    const btnConnexion = document.getElementById('btn-connexion');
+    const spinnerConnexion = btnConnexion.querySelector('.btn-spinner');
+    const labelConnexion = btnConnexion.querySelector('.btn-texte');
+    const messageErreur = document.getElementById('message-erreur');
+
+    function afficherErreur(texte) {
+      messageErreur.textContent = texte;
+      messageErreur.classList.add('visible');
+    }
+
+    function cacherErreur() {
+      messageErreur.classList.remove('visible');
+    }
+
+    function setChargement(chargement) {
+      btnConnexion.disabled = chargement;
+      spinnerConnexion.style.display = chargement ? 'inline-block' : 'none';
+      labelConnexion.textContent = chargement ? 'Connexion...' : 'Se connecter';
+    }
+
+    formulaire.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      cacherErreur();
+
+      const email = document.getElementById('email').value.trim();
+      const motDePasse = document.getElementById('mot-de-passe').value;
+
+      if (!email || !motDePasse) {
+        afficherErreur('Veuillez remplir tous les champs.');
+        return;
+      }
+
+      setChargement(true);
+
+      try {
+        await login(email, motDePasse);
+        window.location.href = 'app.html';
+      } catch (err) {
+        afficherErreur(err.message);
+      } finally {
+        setChargement(false);
+      }
+    });
+  </script>
+</body>
+</html>
