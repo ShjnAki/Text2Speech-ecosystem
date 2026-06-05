@@ -1,7 +1,7 @@
 import { API_URL } from './config.js';
 import { getToken, logout } from './auth.js';
 
-const MAX_CHARS = 2500;
+const MAX_CHARS = 5000;
 
 /**
  * Envoie le texte à l'API TTS et retourne un Blob audio.
