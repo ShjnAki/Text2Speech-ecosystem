@@ -31,10 +31,14 @@ logger = logging.getLogger(__name__)
 
 async def main():
     # Vérification des variables d'environnement requises
-    required_vars = ["TELEGRAM_TOKEN", "DISCORD_TOKEN", "TTS_API_URL", "BOT_EMAIL", "BOT_PASSWORD"]
+    required_vars = ["TELEGRAM_TOKEN", "TTS_API_URL", "BOT_EMAIL", "BOT_PASSWORD"]
     for var in required_vars:
         if not os.getenv(var):
             raise EnvironmentError(f"Variable d'environnement manquante : {var}")
+
+    discord_token = os.getenv("DISCORD_TOKEN")
+    if not discord_token:
+        logger.info("DISCORD_TOKEN absent — bot Discord désactivé.")
 
     # Client partagé entre les deux bots
     api_client = TTSApiClient(
@@ -50,7 +54,7 @@ async def main():
 
     # Initialisation des bots
     telegram_app = create_telegram_app(os.getenv("TELEGRAM_TOKEN"), api_client)
-    discord_client = TTSDiscordBot(api_client=api_client)
+    discord_client = TTSDiscordBot(api_client=api_client) if discord_token else None
 
     # Lancement en parallèle
     async with telegram_app:
@@ -59,9 +63,12 @@ async def main():
         await telegram_app.updater.start_polling(drop_pending_updates=True)
         logger.info("Bot Telegram démarré.")
 
-        logger.info("Bot Discord démarré.")
         try:
-            await discord_client.start(os.getenv("DISCORD_TOKEN"))
+            if discord_client:
+                logger.info("Bot Discord démarré.")
+                await discord_client.start(discord_token)
+            else:
+                await asyncio.Event().wait()
         finally:
             await telegram_app.updater.stop()
             await telegram_app.stop()
