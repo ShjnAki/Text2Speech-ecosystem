@@ -1,13 +1,10 @@
 import os
-import tempfile
-from pathlib import Path
 
-from elevenlabs.client import ElevenLabs
-from elevenlabs import save
+from google.cloud import texttospeech
 
 from utils import strip_markdown
 
-MAX_CHARS = 2500
+MAX_CHARS = 5000
 
 
 class TTSError(Exception):
@@ -16,7 +13,7 @@ class TTSError(Exception):
 
 def generate_tts_audio(text: str) -> bytes:
     """
-    Nettoie le texte, appelle ElevenLabs, retourne les bytes mp3.
+    Nettoie le texte, appelle Google Cloud TTS, retourne les bytes mp3.
     Lève TTSError si le texte est trop long ou si l'API échoue.
     """
     text_propre = strip_markdown(text)
@@ -27,28 +24,22 @@ def generate_tts_audio(text: str) -> bytes:
             f"({len(text_propre)} caractères). Veuillez le raccourcir."
         )
 
-    api_key = os.getenv("ELEVENLABS_API_KEY", "")
-    voice_id = os.getenv("ELEVENLABS_VOICE_ID", "")
-
-    if not api_key or not voice_id:
-        raise TTSError("ELEVENLABS_API_KEY ou ELEVENLABS_VOICE_ID manquant dans .env")
-
-    client = ElevenLabs(api_key=api_key)
-
-    # Génère l'audio en streaming puis sauvegarde dans un fichier temporaire
-    with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp:
-        tmp_path = tmp.name
+    language = os.getenv("GOOGLE_TTS_LANGUAGE", "fr-FR")
+    voice_name = os.getenv("GOOGLE_TTS_VOICE", "fr-FR-Neural2-A")
 
     try:
-        audio = client.generate(
-            text=text_propre,
-            voice=voice_id,
-            model="eleven_multilingual_v2",
+        client = texttospeech.TextToSpeechClient()
+        synthesis_input = texttospeech.SynthesisInput(text=text_propre)
+        voice = texttospeech.VoiceSelectionParams(
+            language_code=language,
+            name=voice_name,
         )
-        save(audio, tmp_path)
-        return Path(tmp_path).read_bytes()
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.MP3
+        )
+        response = client.synthesize_speech(
+            input=synthesis_input, voice=voice, audio_config=audio_config
+        )
+        return response.audio_content
     except Exception as e:
-        raise TTSError(f"Erreur ElevenLabs : {e}")
-    finally:
-        # Suppression du fichier temporaire après lecture
-        Path(tmp_path).unlink(missing_ok=True)
+        raise TTSError(f"Erreur Google TTS : {e}")

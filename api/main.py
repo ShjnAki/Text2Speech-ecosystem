@@ -75,7 +75,7 @@ def login(request: LoginRequest):
 
 @app.post("/tts")
 def text_to_speech(request: TTSRequest, current_user: str = Depends(get_current_user)):
-    """Convertit du texte en audio MP3 via ElevenLabs."""
+    """Convertit du texte en audio MP3 via Google Cloud TTS."""
     try:
         audio_bytes = generate_tts_audio(request.text)
     except TTSError as e:

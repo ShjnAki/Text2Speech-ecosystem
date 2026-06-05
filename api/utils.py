@@ -2,7 +2,7 @@ import re
 
 
 def strip_markdown(text: str) -> str:
-    """Supprime la syntaxe Markdown avant envoi à ElevenLabs."""
+    """Supprime la syntaxe Markdown avant envoi au TTS."""
     # Blocs de code (``` ... ```)
     text = re.sub(r'```[\s\S]*?```', lambda m: m.group(0).split('\n', 1)[-1].rsplit('\n', 1)[0], text)
     # Titres (#, ##, etc.)
