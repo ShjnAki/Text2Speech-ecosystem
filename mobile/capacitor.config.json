@@ -1,6 +1,6 @@
 {
   "appId": "com.tts.mobile",
-  "appName": "TTS Mobile",
+  "appName": "Robo-toutou",
   "webDir": "src",
   "server": {
     "androidScheme": "https"
