@@ -4,14 +4,14 @@ Système de synthèse vocale (Text-to-Speech) multi-plateforme composé de trois
 
 ```
 ┌─────────────┐     JWT      ┌──────────────────────────────┐
-│  Mobile     │ ──────────► │                              │
-│  (Android)  │             │   API REST (FastAPI)         │
-└─────────────┘             │   Google Cloud TTS           │
+│  Mobile     │ ──────────►  │                              │
+│  (Android)  │              │   API REST (FastAPI)         │
+└─────────────┘              │   Google Cloud TTS           │
                              │                              │
 ┌─────────────┐     JWT      │   VPS Contabo (Debian)       │
-│  Bot        │ ──────────► │   systemd + Nginx + HTTPS    │
-│  Telegram   │             │                              │
-│  Discord    │             └──────────────────────────────┘
+│  Bot        │ ──────────►  │   systemd + Nginx + HTTPS    │
+│  Telegram   │              │                              │
+│  Discord    │              └──────────────────────────────┘
 └─────────────┘
 ```
 
