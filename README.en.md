@@ -3,12 +3,12 @@
 A multi-platform Text-to-Speech system made up of three independent modules: a REST API, messaging bots, and an Android mobile app.
 
 ```
-┌─────────────┐     JWT      ┌──────────────────────────────┐
+┌─────────────┐     JWT     ┌──────────────────────────────┐
 │  Mobile     │ ──────────► │                              │
 │  (Android)  │             │   REST API (FastAPI)         │
 └─────────────┘             │   Google Cloud TTS           │
-                             │                              │
-┌─────────────┐     JWT      │   VPS Contabo (Debian)       │
+                            |                              │
+┌─────────────┐     JWT     |    VPS under Debian 12       │
 │  Bot        │ ──────────► │   systemd + Nginx + HTTPS    │
 │  Telegram   │             │                              │
 │  Discord    │             └──────────────────────────────┘
@@ -46,7 +46,7 @@ tts-ecosystem/
 | Framework | FastAPI 0.111 + Uvicorn |
 | TTS | Google Cloud Text-to-Speech |
 | Auth | JWT (python-jose) + bcrypt (passlib) |
-| Deployment | Contabo VPS (Debian), systemd, Nginx, Let's Encrypt |
+| Deployment |  VPS (with Debian 12), systemd, Nginx, Let's Encrypt |
 
 ### Bot (`bot/`)
 
