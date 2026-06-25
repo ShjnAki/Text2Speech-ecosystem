@@ -4,12 +4,12 @@ Système de synthèse vocale (Text-to-Speech) multi-plateforme composé de trois
 
 ```
 ┌─────────────┐     JWT      ┌──────────────────────────────┐
-│  Mobile     │ ──────────►  │                              │
+│   Mobile    │ ──────────►  │                              │
 │  (Android)  │              │   API REST (FastAPI)         │
 └─────────────┘              │   Google Cloud TTS           │
                              │                              │
-┌─────────────┐     JWT      │   VPS Contabo (Debian)       │
-│  Bot        │ ──────────►  │   systemd + Nginx + HTTPS    │
+┌─────────────┐     JWT      │        VPS (Debian)          │
+│    Bot      │ ──────────►  │   systemd + Nginx + HTTPS    │
 │  Telegram   │              │                              │
 │  Discord    │              └──────────────────────────────┘
 └─────────────┘
@@ -46,7 +46,7 @@ tts-ecosystem/
 | Framework | FastAPI 0.111 + Uvicorn |
 | TTS | Google Cloud Text-to-Speech |
 | Auth | JWT (python-jose) + bcrypt (passlib) |
-| Déploiement | VPS Contabo Debian, systemd, Nginx, Let's Encrypt |
+| Déploiement | VPS sous Debian 12, systemd, Nginx, Let's Encrypt |
 
 ### Bot (`bot/`)
 
